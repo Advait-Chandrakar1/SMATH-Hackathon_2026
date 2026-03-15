@@ -16,58 +16,41 @@ export default function AboutPage() {
             About ReefGuard
           </p>
           <h1 className="mt-3 text-4xl font-semibold leading-tight text-white md:text-5xl">
-            Our purpose is simple: turn curiosity into protection.
+            Our purpose is simple: Raise and Spread Awareness about coral reefs.
           </h1>
           <p className="mx-auto mt-4 max-w-2xl text-base leading-relaxed text-sky-100/80">
-            We are spreading awareness and giving users a real way to help coral
+            With our site, we are spreading awareness and giving users real ways to help coral
             reefs across the world. ReefGuard is built to show the risks reefs
-            face today - warming oceans, bleaching, and pollution - and to make
-            that information feel personal, actionable, and worth caring about.
+            face today, such as warming oceans, bleaching, and pollution, and to make
+            that information feel personal, actionable, and something worth caring about.
           </p>
         </header>
 
-        <section className="grid gap-6 md:grid-cols-3">
-          <div className="rounded-2xl border border-white/15 bg-white/5 p-6 text-sky-100/85 shadow-[0_8px_30px_rgba(2,11,24,0.4)]">
+        <section className="grid gap-6 md:grid-cols-2 md:place-items-center">
+          <div className="w-full max-w-md rounded-2xl border border-white/15 bg-white/5 p-6 text-sky-100/85 shadow-[0_8px_30px_rgba(2,11,24,0.4)]">
             <h2 className="text-lg font-semibold text-white">See the data</h2>
             <p className="mt-2 text-sm leading-relaxed">
-              A user lands on the map and sees the world's reefs color-coded by
-              risk. Clicking one - like the Great Barrier Reef - opens a panel
-              with temperature trends, bleaching history, coral cover, and a
-              real NOAA fact to ground the story in science.
+              A user lands on to the homepage and gets a warm welcome to the site.  They can explore and see all the reefs we have data on or talk with our ReefGuard AI assistant.
             </p>
           </div>
-          <div className="rounded-2xl border border-white/15 bg-white/5 p-6 text-sky-100/85 shadow-[0_8px_30px_rgba(2,11,24,0.4)]">
-            <h2 className="text-lg font-semibold text-white">Adopt and track</h2>
-            <p className="mt-2 text-sm leading-relaxed">
-              If a reef matters to them, they tap "Adopt this reef" and it's
-              saved permanently. They can visit My Reefs anytime to compare the
-              reefs they're tracking side by side and watch how conditions
-              change over time.
-            </p>
-          </div>
-          <div className="rounded-2xl border border-white/15 bg-white/5 p-6 text-sky-100/85 shadow-[0_8px_30px_rgba(2,11,24,0.4)]">
+  
+          <div className="w-full max-w-md rounded-2xl border border-white/15 bg-white/5 p-6 text-sky-100/85 shadow-[0_8px_30px_rgba(2,11,24,0.4)]">
             <h2 className="text-lg font-semibold text-white">
               Understand the big picture
             </h2>
             <p className="mt-2 text-sm leading-relaxed">
-              The Global Stats tab shows which reefs are hottest, how risk is
-              distributed worldwide, and the average coral cover across
-              monitored sites - turning individual concern into global context.
+              The reefs page and our AI assistant are designed to give insightful information about the state of reefs, the risk they face, and ways users can help.
             </p>
           </div>
         </section>
 
         <section className="rounded-3xl border border-white/15 bg-white/5 p-8 text-sky-100/85">
-          <h2 className="text-2xl font-semibold text-white">
+          <h2 className="text-center text-2xl font-semibold text-white">
             What we want visitors to feel
           </h2>
           <p className="mt-3 text-sm leading-relaxed">
-            ReefGuard is designed around three things judges respond to: real
-            data, a clear emotional hook through adoption, and educational
-            content woven throughout rather than bolted on. The goal is to help
-            people learn fast, care deeply, and take action - whether that's
-            adopting a reef, sharing its story, or changing a daily habit that
-            reduces ocean pollution.
+            ReefGuard is designed to make users feel informed and connected to the issue of coral reef conservation.
+            We want them to feel moved to care about reefs and to take action to help protect them.
           </p>
         </section>
 
