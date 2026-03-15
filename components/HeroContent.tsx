@@ -131,6 +131,14 @@ export default function HeroContent() {
               About Us
             </Button>
           </Link>
+          <Link href="/AI">
+            <Button
+              variant="outline"
+              className="body-font rounded-full border-sky-200/70 bg-white/40 px-5 text-xs font-medium uppercase tracking-widest text-sky-600 backdrop-blur hover:bg-white/60 hover:border-sky-300 hover:text-sky-700"
+            >
+              ReefGuard AI
+            </Button>
+          </Link>
         </nav>
       </div>
 
