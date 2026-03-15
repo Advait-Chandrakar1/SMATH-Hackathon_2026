@@ -1,5 +1,6 @@
 import OceanBg from "@/components/Oceanbg";
 import HeroContent from "@/components/HeroContent";
+import LeafletMap from "@/components/LeafletMap";
 
 export default function Home() {
   return (
@@ -12,6 +13,9 @@ export default function Home() {
     >
       <OceanBg />
       <HeroContent />
+      <section className="relative z-10 mx-auto w-full max-w-6xl px-6 pb-20">
+        <LeafletMap />
+      </section>
     </div>
   );
 }

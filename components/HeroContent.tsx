@@ -2,7 +2,7 @@ import Link from "next/link";
 
 export default function HeroContent() {
   return (
-    <main className="relative z-10 flex min-h-screen flex-col items-center px-6 pb-16 pt-10 text-center">
+    <main className="relative z-10 flex flex-col items-center px-6 pb-6 pt-10 text-center">
       <div className="absolute right-6 top-6 flex items-center gap-3">
         <Link
           href="/settings"
@@ -50,6 +50,7 @@ export default function HeroContent() {
         </Link>
       </nav>
 
+      {/*
       <div className="mt-auto flex flex-wrap justify-center gap-4 pb-0.1">
         <a
           href="/gallery"
@@ -63,6 +64,7 @@ export default function HeroContent() {
           View Gallery
         </a>
       </div>
+      */}
     </main>
   );
 }
