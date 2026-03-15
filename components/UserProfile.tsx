@@ -40,7 +40,9 @@ export default function UserProfileCard({
     return total;
   }, 0);
   const guardianScore =
-    profile.likes.length * 2 + profile.bookmarks.length + profile.reviews.length * 3;
+    profile.likes.length * 2 +
+    profile.bookmarks.length +
+    profile.reviews.length * 3;
 
   const formatTimestamp = (timestamp?: any) => {
     if (!timestamp) return "";
@@ -109,6 +111,37 @@ export default function UserProfileCard({
               {profile.reviews.length}
             </p>
             <p className="text-xs text-sky-500">Reviews</p>
+          </div>
+        </CardContent>
+      </Card>
+
+      <Card className="border-sky-100 bg-white/80 shadow-lg backdrop-blur-xl">
+        <CardHeader>
+          <CardTitle className="text-xs uppercase tracking-wider text-sky-400">
+            Settings
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-3 text-sm text-sky-800">
+          <div className="flex items-center justify-between rounded-xl border border-sky-100 bg-white px-3 py-2">
+            <span>Profile sync</span>
+            <Badge
+              variant="outline"
+              className="border-emerald-200 text-emerald-600"
+            >
+              Live
+            </Badge>
+          </div>
+          <div className="flex items-center justify-between rounded-xl border border-sky-100 bg-white px-3 py-2">
+            <span>Saved reefs</span>
+            <span className="text-xs text-sky-500">
+              {profile.bookmarks.length} synced
+            </span>
+          </div>
+          <div className="flex items-center justify-between rounded-xl border border-sky-100 bg-white px-3 py-2">
+            <span>Reviews</span>
+            <span className="text-xs text-sky-500">
+              {profile.reviews.length} synced
+            </span>
           </div>
         </CardContent>
       </Card>
@@ -198,9 +231,7 @@ export default function UserProfileCard({
               ) : (
                 <div className="space-y-3">
                   {profile.reviews.map((review, idx) => {
-                    const reef = reefs.find(
-                      (r) => r.slug === review.reefSlug
-                    );
+                    const reef = reefs.find((r) => r.slug === review.reefSlug);
                     return (
                       <div
                         key={`${review.reefSlug}-${idx}`}
@@ -214,9 +245,7 @@ export default function UserProfileCard({
                             {formatTimestamp(review.timestamp)}
                           </span>
                         </div>
-                        <p className="text-sm text-slate-600">
-                          {review.text}
-                        </p>
+                        <p className="text-sm text-slate-600">{review.text}</p>
                       </div>
                     );
                   })}

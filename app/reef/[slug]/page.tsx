@@ -9,6 +9,7 @@ import {
   arrayUnion,
   collection,
   doc,
+  getDoc,
   increment,
   limit,
   onSnapshot,
@@ -21,7 +22,7 @@ import {
 import type { Reef, UserProfile } from "@/lib/types";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Bookmark, Heart } from "lucide-react";
+import { Bookmark, Heart, Waves } from "lucide-react";
 import ReefLocationMap from "@/components/ReefLocationMap";
 import ReefStatsChart from "@/components/ReefStatsChart";
 import ReviewList from "@/components/ReviewList";
@@ -59,18 +60,19 @@ export default function ReefDetailPage() {
   useEffect(() => {
     if (!user) return;
     const userRef = doc(db, "users", user.uid);
-    setDoc(
-      userRef,
-      {
+    const ensureUserDoc = async () => {
+      const snap = await getDoc(userRef);
+      if (snap.exists()) return;
+      await setDoc(userRef, {
         uid: user.uid,
         displayName: user.displayName ?? "Reef Guardian",
         email: user.email ?? "",
         bookmarks: [],
         likes: [],
         reviews: [],
-      },
-      { merge: true }
-    );
+      });
+    };
+    ensureUserDoc();
     const unsubscribe = onSnapshot(userRef, (snapshot) => {
       if (!snapshot.exists()) return;
       setUserProfile(snapshot.data() as UserProfile);
@@ -88,17 +90,37 @@ export default function ReefDetailPage() {
     return userProfile.bookmarks.includes(slug);
   }, [userProfile, slug]);
 
+  const ensureUserDoc = async () => {
+    if (!user) return;
+    const userRef = doc(db, "users", user.uid);
+    const snap = await getDoc(userRef);
+    if (snap.exists()) return;
+    await setDoc(userRef, {
+      uid: user.uid,
+      displayName: user.displayName ?? "Reef Guardian",
+      email: user.email ?? "",
+      bookmarks: [],
+      likes: [],
+      reviews: [],
+    });
+  };
+
   const handleToggleLike = async () => {
     if (!user || !reef || !slug) return;
     const reefRef = doc(db, "reefs", reef.id!);
     const userRef = doc(db, "users", user.uid);
 
-    if (isLiked) {
-      await updateDoc(userRef, { likes: arrayRemove(slug) });
-      await updateDoc(reefRef, { likes: increment(-1) });
-    } else {
-      await updateDoc(userRef, { likes: arrayUnion(slug) });
-      await updateDoc(reefRef, { likes: increment(1) });
+    try {
+      await ensureUserDoc();
+      if (isLiked) {
+        await setDoc(userRef, { likes: arrayRemove(slug) }, { merge: true });
+        await updateDoc(reefRef, { likes: increment(-1) });
+      } else {
+        await setDoc(userRef, { likes: arrayUnion(slug) }, { merge: true });
+        await updateDoc(reefRef, { likes: increment(1) });
+      }
+    } catch (err) {
+      console.error("Failed to toggle like:", err);
     }
   };
 
@@ -107,12 +129,25 @@ export default function ReefDetailPage() {
     const reefRef = doc(db, "reefs", reef.id!);
     const userRef = doc(db, "users", user.uid);
 
-    if (isBookmarked) {
-      await updateDoc(userRef, { bookmarks: arrayRemove(slug) });
-      await updateDoc(reefRef, { bookmarks: increment(-1) });
-    } else {
-      await updateDoc(userRef, { bookmarks: arrayUnion(slug) });
-      await updateDoc(reefRef, { bookmarks: increment(1) });
+    try {
+      await ensureUserDoc();
+      if (isBookmarked) {
+        await setDoc(
+          userRef,
+          { bookmarks: arrayRemove(slug) },
+          { merge: true }
+        );
+        await updateDoc(reefRef, { bookmarks: increment(-1) });
+      } else {
+        await setDoc(
+          userRef,
+          { bookmarks: arrayUnion(slug) },
+          { merge: true }
+        );
+        await updateDoc(reefRef, { bookmarks: increment(1) });
+      }
+    } catch (err) {
+      console.error("Failed to toggle bookmark:", err);
     }
   };
 
@@ -121,20 +156,29 @@ export default function ReefDetailPage() {
     const reefRef = doc(db, "reefs", reef.id!);
     const userRef = doc(db, "users", user.uid);
     const timestamp = Timestamp.now();
-    await updateDoc(reefRef, {
-      reviews: arrayUnion({
-        uid: user.uid,
-        text,
-        timestamp,
-      }),
-    });
-    await updateDoc(userRef, {
-      reviews: arrayUnion({
-        reefSlug: slug,
-        text,
-        timestamp,
-      }),
-    });
+    try {
+      await ensureUserDoc();
+      await updateDoc(reefRef, {
+        reviews: arrayUnion({
+          uid: user.uid,
+          text,
+          timestamp,
+        }),
+      });
+      await setDoc(
+        userRef,
+        {
+          reviews: arrayUnion({
+            reefSlug: slug,
+            text,
+            timestamp,
+          }),
+        },
+        { merge: true }
+      );
+    } catch (err) {
+      console.error("Failed to submit review:", err);
+    }
   };
 
   if (!reef) {
@@ -156,11 +200,11 @@ export default function ReefDetailPage() {
           </CardHeader>
           <CardContent className="grid gap-6 md:grid-cols-[1.2fr_1fr]">
             <div className="space-y-4">
-              <img
-                src={reef.image || "/reefguard logo.png"}
-                alt={reef.name}
-                className="h-56 w-full rounded-2xl object-cover"
-              />
+              <div className="flex h-56 w-full items-center justify-center rounded-2xl border border-sky-200/10 bg-gradient-to-br from-sky-500/20 via-cyan-500/20 to-emerald-500/20">
+                <div className="flex h-20 w-20 items-center justify-center rounded-2xl border border-sky-200/30 bg-slate-950/50">
+                  <Waves className="h-10 w-10 text-sky-200" />
+                </div>
+              </div>
               <p className="text-sm text-sky-100/80">{reef.description}</p>
               {(reef.facts?.length || reef.issues?.length) && (
                 <div className="space-y-3 rounded-2xl border border-sky-200/10 bg-slate-900/60 p-4">
@@ -223,9 +267,10 @@ export default function ReefDetailPage() {
             </div>
 
             <ReefStatsChart
-              likes={reef.likes ?? 0}
-              reviews={reef.reviews?.length ?? 0}
-              bookmarks={reef.bookmarks ?? 0}
+              coralCover={reef.stats?.coralCover ?? 0}
+              fishDiversity={reef.stats?.fishDiversity ?? 0}
+              waterClarity={reef.stats?.waterClarity ?? 0}
+              heatStress={reef.stats?.heatStress ?? 0}
             />
           </CardContent>
         </Card>

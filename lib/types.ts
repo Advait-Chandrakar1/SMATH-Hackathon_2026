@@ -13,9 +13,14 @@ export type Reef = {
   description: string;
   latitude: number;
   longitude: number;
-  image?: string;
   facts?: string[];
   issues?: string[];
+  stats?: {
+    coralCover: number;
+    fishDiversity: number;
+    waterClarity: number;
+    heatStress: number;
+  };
   likes?: number;
   bookmarks?: number;
   reviews?: ReefReview[];

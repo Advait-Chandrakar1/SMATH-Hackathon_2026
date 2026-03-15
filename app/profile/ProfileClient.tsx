@@ -8,6 +8,7 @@ import { db } from "@/lib/firebase";
 import {
   collection,
   doc,
+  getDoc,
   onSnapshot,
   query,
   setDoc,
@@ -23,18 +24,19 @@ export default function ProfileClient() {
   useEffect(() => {
     if (!user) return;
     const userRef = doc(db, "users", user.uid);
-    setDoc(
-      userRef,
-      {
+    const ensureUserDoc = async () => {
+      const snap = await getDoc(userRef);
+      if (snap.exists()) return;
+      await setDoc(userRef, {
         uid: user.uid,
         displayName: user.displayName ?? "Reef Guardian",
         email: user.email ?? "",
         bookmarks: [],
         likes: [],
         reviews: [],
-      },
-      { merge: true }
-    );
+      });
+    };
+    ensureUserDoc();
 
     const unsubscribe = onSnapshot(userRef, (snapshot) => {
       if (!snapshot.exists()) return;
