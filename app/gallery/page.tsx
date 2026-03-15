@@ -1,4 +1,4 @@
-import DomeGallery from "@/components/DomeGallery";
+import ClientOnlyGallery from "@/components/ClientOnlyGallery";
 
 export default function GalleryPage() {
   return (
@@ -9,15 +9,8 @@ export default function GalleryPage() {
           "linear-gradient(to bottom, #041020, #052030 30%, #062a3e 60%, #0a3d56)",
       }}
     >
-      <section className="relative z-10 w-full h-screen">
-        <DomeGallery
-          fit={0.8}
-          minRadius={600}
-          maxVerticalRotationDeg={0}
-          segments={34}
-          dragDampening={2}
-          grayscale
-        />
+      <section className="relative z-10 h-screen w-full">
+        <ClientOnlyGallery />
       </section>
     </div>
   );
