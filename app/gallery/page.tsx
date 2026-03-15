@@ -4,8 +4,7 @@ import { useEffect, useState } from "react";
 import { db } from "@/lib/firebase";
 import { collection, onSnapshot } from "firebase/firestore";
 import ReefCard from "@/components/ReefCard";
-import ShowMapButton from "@/components/ShowMapButton";
-import LeafletMap from "@/components/LeafletMap";
+
 import SeedReefsButton from "@/components/SeedReefsButton";
 import type { Reef } from "@/lib/types";
 
@@ -32,12 +31,7 @@ export default function GalleryPage() {
       }}
     >
       <section className="mb-3 ml-2 mt-2.5 flex flex-wrap items-center gap-3">
-        <ShowMapButton />
         <SeedReefsButton />
-      </section>
-
-      <section className="mb-6">
-        <LeafletMap />
       </section>
 
       <section className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">

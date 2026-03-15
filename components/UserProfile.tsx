@@ -39,6 +39,21 @@ export default function UserProfileCard({
     }
     return total;
   }, 0);
+  const guardianScore =
+    profile.likes.length * 2 + profile.bookmarks.length + profile.reviews.length * 3;
+
+  const formatTimestamp = (timestamp?: any) => {
+    if (!timestamp) return "";
+    try {
+      const date =
+        typeof timestamp.toDate === "function"
+          ? timestamp.toDate()
+          : new Date(timestamp);
+      return date.toLocaleDateString();
+    } catch {
+      return "";
+    }
+  };
 
   return (
     <div className="flex flex-col gap-6">
@@ -67,6 +82,40 @@ export default function UserProfileCard({
       <Card className="border-sky-100 bg-white/80 shadow-lg backdrop-blur-xl">
         <CardHeader>
           <CardTitle className="text-xs uppercase tracking-wider text-sky-400">
+            Snapshot
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="grid gap-3 md:grid-cols-4">
+          <div className="rounded-xl border border-sky-100 bg-white px-3 py-3 text-center">
+            <p className="text-2xl font-semibold text-sky-900">
+              {profile.bookmarks.length}
+            </p>
+            <p className="text-xs text-sky-500">Bookmarks</p>
+          </div>
+          <div className="rounded-xl border border-sky-100 bg-white px-3 py-3 text-center">
+            <p className="text-2xl font-semibold text-sky-900">
+              {profile.likes.length}
+            </p>
+            <p className="text-xs text-sky-500">Likes given</p>
+          </div>
+          <div className="rounded-xl border border-sky-100 bg-white px-3 py-3 text-center">
+            <p className="text-2xl font-semibold text-sky-900">
+              {likesReceived}
+            </p>
+            <p className="text-xs text-sky-500">Likes received</p>
+          </div>
+          <div className="rounded-xl border border-sky-100 bg-white px-3 py-3 text-center">
+            <p className="text-2xl font-semibold text-sky-900">
+              {profile.reviews.length}
+            </p>
+            <p className="text-xs text-sky-500">Reviews</p>
+          </div>
+        </CardContent>
+      </Card>
+
+      <Card className="border-sky-100 bg-white/80 shadow-lg backdrop-blur-xl">
+        <CardHeader>
+          <CardTitle className="text-xs uppercase tracking-wider text-sky-400">
             Your Activity
           </CardTitle>
         </CardHeader>
@@ -74,6 +123,7 @@ export default function UserProfileCard({
           <Tabs defaultValue="bookmarks">
             <TabsList className="w-full justify-start">
               <TabsTrigger value="bookmarks">Bookmarks</TabsTrigger>
+              <TabsTrigger value="likes">Likes</TabsTrigger>
               <TabsTrigger value="reviews">Reviews</TabsTrigger>
               <TabsTrigger value="stats">Stats</TabsTrigger>
             </TabsList>
@@ -93,7 +143,46 @@ export default function UserProfileCard({
                         href={`/reef/${slug}`}
                         className="block rounded-xl border border-sky-100 bg-white px-3 py-2 text-sm text-sky-800 shadow-sm transition hover:border-sky-200"
                       >
-                        {reef?.name ?? slug}
+                        <div className="flex items-center justify-between">
+                          <span className="font-semibold">
+                            {reef?.name ?? slug}
+                          </span>
+                          {reef?.issues?.length ? (
+                            <span className="rounded-full bg-rose-50 px-2 py-0.5 text-[10px] text-rose-600">
+                              {reef.issues[0]}
+                            </span>
+                          ) : null}
+                        </div>
+                      </Link>
+                    );
+                  })}
+                </div>
+              )}
+            </TabsContent>
+
+            <TabsContent value="likes">
+              {profile.likes.length === 0 ? (
+                <p className="text-sm text-sky-500/70">
+                  No likes yet. Tap the heart on a reef page.
+                </p>
+              ) : (
+                <div className="space-y-2">
+                  {profile.likes.map((slug) => {
+                    const reef = reefs.find((r) => r.slug === slug);
+                    return (
+                      <Link
+                        key={slug}
+                        href={`/reef/${slug}`}
+                        className="block rounded-xl border border-emerald-100 bg-white px-3 py-2 text-sm text-emerald-900 shadow-sm transition hover:border-emerald-200"
+                      >
+                        <div className="flex items-center justify-between">
+                          <span className="font-semibold">
+                            {reef?.name ?? slug}
+                          </span>
+                          <span className="rounded-full bg-emerald-50 px-2 py-0.5 text-[10px] text-emerald-600">
+                            {reef?.likes ?? 0} likes
+                          </span>
+                        </div>
                       </Link>
                     );
                   })}
@@ -117,10 +206,17 @@ export default function UserProfileCard({
                         key={`${review.reefSlug}-${idx}`}
                         className="rounded-xl border border-sky-100 bg-white px-3 py-2 text-sm text-sky-800 shadow-sm"
                       >
-                        <p className="font-semibold">
-                          {reef?.name ?? review.reefSlug}
+                        <div className="flex items-center justify-between">
+                          <p className="font-semibold">
+                            {reef?.name ?? review.reefSlug}
+                          </p>
+                          <span className="text-[11px] text-slate-400">
+                            {formatTimestamp(review.timestamp)}
+                          </span>
+                        </div>
+                        <p className="text-sm text-slate-600">
+                          {review.text}
                         </p>
-                        <p className="text-sm text-slate-600">{review.text}</p>
                       </div>
                     );
                   })}
@@ -129,24 +225,37 @@ export default function UserProfileCard({
             </TabsContent>
 
             <TabsContent value="stats">
-              <div className="grid gap-3 md:grid-cols-3">
-                <div className="rounded-xl border border-sky-100 bg-white px-3 py-3 text-center">
-                  <p className="text-2xl font-semibold text-sky-900">
-                    {profile.likes.length}
+              <div className="grid gap-3 md:grid-cols-2">
+                <div className="rounded-xl border border-sky-100 bg-white px-4 py-4">
+                  <p className="text-sm font-semibold text-sky-900">
+                    Guardian score
                   </p>
-                  <p className="text-xs text-sky-500">Likes given</p>
+                  <p className="text-3xl font-semibold text-sky-900">
+                    {guardianScore}
+                  </p>
+                  <p className="text-xs text-sky-500">
+                    Based on likes, bookmarks, and reviews.
+                  </p>
                 </div>
-                <div className="rounded-xl border border-sky-100 bg-white px-3 py-3 text-center">
-                  <p className="text-2xl font-semibold text-sky-900">
-                    {likesReceived}
+                <div className="rounded-xl border border-sky-100 bg-white px-4 py-4">
+                  <p className="text-sm font-semibold text-sky-900">
+                    Favorite regions
                   </p>
-                  <p className="text-xs text-sky-500">Likes received</p>
-                </div>
-                <div className="rounded-xl border border-sky-100 bg-white px-3 py-3 text-center">
-                  <p className="text-2xl font-semibold text-sky-900">
-                    {profile.reviews.length}
-                  </p>
-                  <p className="text-xs text-sky-500">Reviews</p>
+                  <div className="mt-2 flex flex-wrap gap-2">
+                    {reefs.slice(0, 3).map((reef) => (
+                      <span
+                        key={reef.slug}
+                        className="rounded-full bg-sky-50 px-3 py-1 text-xs text-sky-700"
+                      >
+                        {reef.name}
+                      </span>
+                    ))}
+                    {reefs.length === 0 ? (
+                      <span className="text-xs text-sky-500/70">
+                        Like or bookmark a reef to see this.
+                      </span>
+                    ) : null}
+                  </div>
                 </div>
               </div>
 

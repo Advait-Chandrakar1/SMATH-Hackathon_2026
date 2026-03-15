@@ -13,8 +13,8 @@ import {
   limit,
   onSnapshot,
   query,
-  serverTimestamp,
   setDoc,
+  Timestamp,
   updateDoc,
   where,
 } from "firebase/firestore";
@@ -120,18 +120,19 @@ export default function ReefDetailPage() {
     if (!user || !reef || !slug) return;
     const reefRef = doc(db, "reefs", reef.id!);
     const userRef = doc(db, "users", user.uid);
+    const timestamp = Timestamp.now();
     await updateDoc(reefRef, {
       reviews: arrayUnion({
         uid: user.uid,
         text,
-        timestamp: serverTimestamp(),
+        timestamp,
       }),
     });
     await updateDoc(userRef, {
       reviews: arrayUnion({
         reefSlug: slug,
         text,
-        timestamp: serverTimestamp(),
+        timestamp,
       }),
     });
   };

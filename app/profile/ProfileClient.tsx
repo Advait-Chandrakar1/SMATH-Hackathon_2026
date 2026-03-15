@@ -8,7 +8,6 @@ import { db } from "@/lib/firebase";
 import {
   collection,
   doc,
-  getDocs,
   onSnapshot,
   query,
   setDoc,
@@ -50,6 +49,7 @@ export default function ProfileClient() {
     const slugs = Array.from(
       new Set([
         ...profile.bookmarks,
+        ...profile.likes,
         ...profile.reviews.map((review) => review.reefSlug),
       ])
     );
@@ -58,29 +58,29 @@ export default function ProfileClient() {
       return;
     }
 
-    const fetchReefs = async () => {
-      const chunks: string[][] = [];
-      for (let i = 0; i < slugs.length; i += 10) {
-        chunks.push(slugs.slice(i, i + 10));
-      }
+    const chunks: string[][] = [];
+    for (let i = 0; i < slugs.length; i += 10) {
+      chunks.push(slugs.slice(i, i + 10));
+    }
 
-      const results = await Promise.all(
-        chunks.map((chunk) =>
-          getDocs(query(collection(db, "reefs"), where("slug", "in", chunk)))
-        )
-      );
+    const unsubscribes = chunks.map((chunk) =>
+      onSnapshot(
+        query(collection(db, "reefs"), where("slug", "in", chunk)),
+        (snapshot) => {
+          setReefMap((prev) => {
+            const next = { ...prev };
+            snapshot.forEach((docSnap) => {
+              const data = docSnap.data() as Reef;
+              const reefSlug = data.slug || docSnap.id;
+              next[reefSlug] = { ...data, slug: reefSlug, id: docSnap.id };
+            });
+            return next;
+          });
+        }
+      )
+    );
 
-      const nextMap: Record<string, Reef> = {};
-      results.forEach((snapshot) => {
-        snapshot.forEach((docSnap) => {
-          const data = docSnap.data() as Reef;
-          nextMap[data.slug] = { ...data, id: docSnap.id };
-        });
-      });
-      setReefMap(nextMap);
-    };
-
-    fetchReefs();
+    return () => unsubscribes.forEach((unsubscribe) => unsubscribe());
   }, [profile]);
 
   const reefs = useMemo(() => Object.values(reefMap), [reefMap]);
