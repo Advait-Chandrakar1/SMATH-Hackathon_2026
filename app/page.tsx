@@ -10,13 +10,6 @@ export default function Home() {
       }}
     >
       <HeroContent />
-
-      {/* Map Section
-      <section className="relative z-10 mx-auto w-full max-w-6xl px-6 pb-20">
-        <LeafletMap />
-      // </section> */}
-      {/* goint o make the leaflet connected to the DB and also make it a button from shadcn and suc
-       */}
     </div>
   );
 }

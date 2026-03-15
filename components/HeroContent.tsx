@@ -61,11 +61,11 @@ export default function HeroContent() {
         className="glass-float relative flex flex-col items-center gap-7 rounded-3xl px-10 py-12 anim-in"
         style={{
           background:
-            "linear-gradient(145deg, rgba(255,255,255,0.52) 0%, rgba(224,246,255,0.38) 60%, rgba(186,234,255,0.22) 100%)",
+            "linear-gradient(145deg, rgba(255,255,255,0.42) 0%, rgba(200,230,245,0.28) 60%, rgba(170,210,240,0.22) 100%)",
           backdropFilter: "blur(28px) saturate(1.6)",
-          border: "1px solid rgba(255,255,255,0.65)",
+          border: "1px solid rgba(255,255,255,0.55)",
           boxShadow:
-            "0 8px 60px rgba(100,200,255,0.18), 0 1px 0 rgba(255,255,255,0.9) inset, 0 -1px 0 rgba(147,210,255,0.3) inset",
+            "0 8px 60px rgba(80,180,240,0.18), 0 1px 0 rgba(255,255,255,0.85) inset, 0 -1px 0 rgba(127,190,235,0.3) inset",
           maxWidth: 560,
         }}
       >
