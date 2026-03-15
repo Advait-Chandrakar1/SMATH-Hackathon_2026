@@ -1,70 +1,158 @@
 import Link from "next/link";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { Separator } from "@/components/ui/separator";
 
 export default function HeroContent() {
   return (
-    <main className="relative z-10 flex flex-col items-center px-6 pb-6 pt-10 text-center">
-      <div className="absolute right-6 top-6 flex items-center gap-3">
-        <Link
-          href="/settings"
-          className="flex h-10 w-10 items-center justify-center rounded-full border border-teal-300/40 text-teal-100/90 transition hover:border-teal-200 hover:text-teal-100"
-          aria-label="Profile settings"
-        >
-          <span className="text-sm font-semibold">Me</span>
-        </Link>
-        <Link
-          href="/sign-in"
-          className="flex h-10 items-center rounded-full border border-teal-400/30 px-4 text-xs font-semibold uppercase tracking-widest text-teal-100/80 transition hover:-translate-y-0.5 hover:border-teal-400/70 hover:bg-teal-400/5"
-        >
-          Sign In
-        </Link>
+    <main className="relative z-10 flex min-h-screen flex-col items-center justify-center overflow-hidden px-6 pb-16 pt-8 text-center">
+      <style>{`
+        @import url('https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;1,400&family=DM+Sans:wght@300;400&display=swap');
+
+        @keyframes caustic {
+          0%, 100% { opacity: 0.4; transform: scale(1) translate(0, 0); }
+          33%       { opacity: 0.7; transform: scale(1.08) translate(12px, -8px); }
+          66%       { opacity: 0.5; transform: scale(0.95) translate(-8px, 12px); }
+        }
+        @keyframes shimmerIn {
+          from { opacity: 0; transform: translateY(18px); }
+          to   { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes glassFloat {
+          0%, 100% { transform: translateY(0px); }
+          50%       { transform: translateY(-5px); }
+        }
+        .hero-font  { font-family: 'Lora', Georgia, serif; }
+        .body-font  { font-family: 'DM Sans', system-ui, sans-serif; }
+        .anim-in    { animation: shimmerIn 0.9s cubic-bezier(0.22,1,0.36,1) both; }
+        .glass-float { animation: glassFloat 6s ease-in-out infinite; }
+      `}</style>
+
+      {/* ── Caustic light blobs (CSS only, no JS) ───────────────────────── */}
+      <div
+        className="pointer-events-none absolute inset-0 overflow-hidden"
+        aria-hidden
+      >
+        {[
+          { w: 420, top: "-8%", left: "15%", dur: "9s", del: "0s" },
+          { w: 300, top: "10%", left: "60%", dur: "13s", del: "2s" },
+          { w: 260, top: "40%", left: "-5%", dur: "11s", del: "1.5s" },
+          { w: 380, top: "55%", left: "55%", dur: "8s", del: "3.5s" },
+          { w: 200, top: "75%", left: "30%", dur: "10s", del: "0.8s" },
+        ].map((b, i) => (
+          <div
+            key={i}
+            className="absolute rounded-full"
+            style={{
+              width: b.w,
+              height: b.w,
+              top: b.top,
+              left: b.left,
+              background:
+                "radial-gradient(circle, rgba(186,234,255,0.55) 0%, rgba(147,214,255,0.25) 45%, transparent 70%)",
+              filter: "blur(40px)",
+              animation: `caustic ${b.dur} ease-in-out ${b.del} infinite`,
+            }}
+          />
+        ))}
       </div>
 
-      <h1 className="font-serif text-5xl font-bold leading-tight tracking-tight text-cyan-50 drop-shadow-lg">
-        Welcome to
-        <em
-          className="ml-3 not-italic text-teal-300"
-          style={{ textShadow: "0 0 24px rgba(78,236,216,0.7)" }}
+      {/* ── Glass card ───────────────────────────────────────────────────── */}
+      <div
+        className="glass-float relative flex flex-col items-center gap-7 rounded-3xl px-10 py-12 anim-in"
+        style={{
+          background:
+            "linear-gradient(145deg, rgba(255,255,255,0.52) 0%, rgba(224,246,255,0.38) 60%, rgba(186,234,255,0.22) 100%)",
+          backdropFilter: "blur(28px) saturate(1.6)",
+          border: "1px solid rgba(255,255,255,0.65)",
+          boxShadow:
+            "0 8px 60px rgba(100,200,255,0.18), 0 1px 0 rgba(255,255,255,0.9) inset, 0 -1px 0 rgba(147,210,255,0.3) inset",
+          maxWidth: 560,
+        }}
+      >
+        {/* Eyebrow badge */}
+        <Badge
+          className="body-font border-sky-200/80 bg-sky-50/80 text-sky-500 backdrop-blur"
+          variant="outline"
+          style={{ animationDelay: "0.1s" }}
         >
-          SeaFloor
-        </em>
-      </h1>
+          🪸 Explore · Learn · Protect
+        </Badge>
 
-      <nav className="mt-6 flex flex-wrap items-center justify-center gap-4">
-        <Link
-          href="/my-reefs"
-          className="rounded-full border border-teal-300/40 px-5 py-2 text-sm font-semibold uppercase tracking-widest text-teal-100/90 transition hover:border-teal-200 hover:bg-teal-400/10"
-        >
-          My Reefs
-        </Link>
-        <Link
-          href="/"
-          className="rounded-full bg-teal-400/90 px-6 py-2 text-sm font-semibold uppercase tracking-widest text-cyan-950 shadow-[0_0_18px_rgba(20,184,196,0.55)] transition hover:-translate-y-0.5"
-        >
-          Home / Map
-        </Link>
-        <Link
-          href="/about"
-          className="rounded-full border border-teal-300/40 px-5 py-2 text-sm font-semibold uppercase tracking-widest text-teal-100/90 transition hover:border-teal-200 hover:bg-teal-400/10"
-        >
-          About Us
-        </Link>
-      </nav>
+        {/* Heading */}
+        <div className="anim-in" style={{ animationDelay: "0.2s" }}>
+          <h1 className="hero-font text-5xl font-semibold leading-tight tracking-tight text-sky-950 md:text-6xl">
+            Welcome to{" "}
+            <em
+              className="not-italic"
+              style={{
+                background:
+                  "linear-gradient(135deg, #0ea5e9, #06b6d4, #22d3ee)",
+                WebkitBackgroundClip: "text",
+                WebkitTextFillColor: "transparent",
+                filter: "drop-shadow(0 0 16px rgba(14,165,233,0.35))",
+              }}
+            >
+              ReefGuard
+            </em>
+          </h1>
+        </div>
 
-      {/*
-      <div className="mt-auto flex flex-wrap justify-center gap-4 pb-0.1">
-        <a
-          href="/gallery"
-          rel="noopener noreferrer"
-          className="flex h-12 items-center gap-2 rounded-full px-7 font-serif text-sm font-bold uppercase tracking-widest text-cyan-950 transition-all hover:-translate-y-0.5 hover:shadow-[0_0_28px_rgba(20,184,196,0.6)]"
-          style={{
-            background: "linear-gradient(135deg, #0d7377, #14b8c4)",
-            boxShadow: "0 0 16px rgba(13,115,119,0.4)",
-          }}
+        {/* Sub-line */}
+        <p
+          className="body-font anim-in max-w-sm text-base font-light leading-relaxed text-sky-700/75"
+          style={{ animationDelay: "0.3s" }}
         >
-          View Gallery
-        </a>
+          Explore endangered coral reefs, discover what threatens them, and find
+          out exactly how you can help.
+        </p>
+
+        <Separator className="bg-sky-200/50" />
+
+        {/* Nav */}
+        <nav
+          className="anim-in flex flex-wrap items-center justify-center gap-3"
+          style={{ animationDelay: "0.4s" }}
+        >
+          s
+          <Link href="/my-reefs">
+            <Button
+              variant="outline"
+              className="body-font rounded-full border-sky-200/70 bg-white/40 px-5 text-xs font-medium uppercase tracking-widest text-sky-600 backdrop-blur hover:bg-white/60 hover:border-sky-300 hover:text-sky-700"
+            >
+              My Reefs
+            </Button>
+          </Link>
+          <Link href="/gallery">
+            <Button
+              className="body-font rounded-full px-6 text-xs font-semibold uppercase tracking-widest text-white"
+              style={{
+                background: "linear-gradient(135deg, #0ea5e9, #06b6d4)",
+                boxShadow:
+                  "0 4px 20px rgba(14,165,233,0.4), 0 1px 0 rgba(255,255,255,0.3) inset",
+              }}
+            >
+              Gallery
+            </Button>
+          </Link>
+          <Link href="/about">
+            <Button
+              variant="outline"
+              className="body-font rounded-full border-sky-200/70 bg-white/40 px-5 text-xs font-medium uppercase tracking-widest text-sky-600 backdrop-blur hover:bg-white/60 hover:border-sky-300 hover:text-sky-700"
+            >
+              About Us
+            </Button>
+          </Link>
+        </nav>
       </div>
-      */}
+
+      {/* ── Subtle bottom depth gradient ────────────────────────────────── */}
+      <div
+        className="pointer-events-none absolute bottom-0 inset-x-0 h-32"
+        style={{
+          background: "linear-gradient(to top, rgba(2,11,24,0.6), transparent)",
+        }}
+      />
     </main>
   );
 }

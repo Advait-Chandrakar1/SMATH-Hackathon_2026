@@ -61,7 +61,6 @@ export default function OceanBg() {
         ))}
       </div>
 
-      {/* Jellyfish */}
       {[
         { top: "10%", left: "7%", w: 50, dur: "22s", delay: "0s" },
         { top: "22%", right: "10%", w: 34, dur: "28s", delay: "6s" },
@@ -100,7 +99,6 @@ export default function OceanBg() {
         </div>
       ))}
 
-      {/* Bubbles */}
       <div className="absolute inset-0 pointer-events-none overflow-hidden">
         {bubbles.map((b, i) => (
           <div
