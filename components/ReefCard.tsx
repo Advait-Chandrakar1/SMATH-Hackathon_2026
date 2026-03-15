@@ -13,7 +13,7 @@ interface ReefCardProps {
 export default function ReefCard({ reef }: ReefCardProps) {
   return (
     <Card className="flex h-full flex-col overflow-hidden rounded-2xl border border-cyan-200/20 bg-cyan-950/50">
-      <div className="relative flex h-44 w-full items-center justify-center bg-gradient-to-br from-sky-500/20 via-cyan-500/20 to-emerald-500/20">
+      <div className="relative flex h-44 w-full items-center justify-center bg-linear-to-br from-sky-500/20 via-cyan-500/20 to-emerald-500/20">
         <div className="flex h-16 w-16 items-center justify-center rounded-2xl border border-sky-200/30 bg-slate-950/50">
           <Waves className="h-8 w-8 text-sky-200" />
         </div>

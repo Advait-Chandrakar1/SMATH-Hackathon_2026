@@ -23,6 +23,7 @@ import type { Reef, UserProfile } from "@/lib/types";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Bookmark, Heart, Waves } from "lucide-react";
+import Link from "next/link";
 import ReefLocationMap from "@/components/ReefLocationMap";
 import ReefStatsChart from "@/components/ReefStatsChart";
 
@@ -193,6 +194,11 @@ export default function ReefDetailPage() {
   return (
     <div className="min-h-screen bg-gradient-to-b from-slate-950 via-slate-900 to-slate-950 px-6 py-10 text-white">
       <div className="mx-auto flex max-w-5xl flex-col gap-6">
+        <Link href="/gallery" className="w-fit">
+          <Button variant="outline" className="rounded-full">
+            Back to gallery
+          </Button>
+        </Link>
         <ReefLocationMap reef={reef} />
 
         <Card className="border border-sky-200/20 bg-slate-950/70 text-white">
