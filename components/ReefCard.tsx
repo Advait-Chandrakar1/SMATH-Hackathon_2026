@@ -23,6 +23,18 @@ export default function ReefCard({ reef }: ReefCardProps) {
       <CardContent className="flex flex-1 flex-col gap-2 p-4">
         <h2 className="text-lg font-semibold text-white">{reef.name}</h2>
         <p className="text-sm text-sky-100/80">{reef.description}</p>
+        {reef.issues?.length ? (
+          <div className="flex flex-wrap gap-1 text-[11px] text-rose-100">
+            {reef.issues.slice(0, 2).map((issue) => (
+              <span
+                key={issue}
+                className="rounded-full bg-rose-500/20 px-2 py-0.5"
+              >
+                {issue}
+              </span>
+            ))}
+          </div>
+        ) : null}
         <div className="mt-2 flex flex-wrap gap-3 text-xs text-sky-100/70">
           <span>{reef.likes ?? 0} likes</span>
           <span>{reef.reviews?.length ?? 0} reviews</span>

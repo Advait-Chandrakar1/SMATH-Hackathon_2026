@@ -4,34 +4,25 @@ import "leaflet/dist/leaflet.css";
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import { useEffect, useState } from "react";
 import { db } from "@/lib/firebase";
-import { collection, getDocs } from "firebase/firestore";
+import { collection, onSnapshot } from "firebase/firestore";
 import L from "leaflet";
 import { useRouter } from "next/navigation";
-
-interface Reef {
-  id: string;
-  slug: string;
-  name: string;
-  description: string;
-  latitude: number;
-  longitude: number;
-}
+import type { Reef } from "@/lib/types";
 
 export default function LeafletMapClient() {
   const [reefs, setReefs] = useState<Reef[]>([]);
   const router = useRouter();
 
   useEffect(() => {
-    async function fetchReefs() {
-      const snapshot = await getDocs(collection(db, "reefs"));
+    const unsubscribe = onSnapshot(collection(db, "reefs"), (snapshot) => {
       const reefsData: Reef[] = snapshot.docs.map((doc) => ({
         id: doc.id,
         ...doc.data(),
       })) as Reef[];
       setReefs(reefsData);
-    }
+    });
 
-    fetchReefs();
+    return () => unsubscribe();
   }, []);
 
   // Optional: custom marker icon
@@ -78,9 +69,34 @@ export default function LeafletMapClient() {
                     {reef.description}
                   </p>
                 </div>
+                {reef.facts?.length ? (
+                  <div>
+                    <p className="text-[11px] font-semibold text-slate-700">
+                      Quick fact
+                    </p>
+                    <p className="text-xs text-slate-600">
+                      {reef.facts[0]}
+                    </p>
+                  </div>
+                ) : null}
+                {reef.issues?.length ? (
+                  <div className="flex flex-wrap gap-1 text-[10px] text-rose-600">
+                    {reef.issues.slice(0, 2).map((issue) => (
+                      <span
+                        key={issue}
+                        className="rounded-full bg-rose-50 px-2 py-0.5"
+                      >
+                        {issue}
+                      </span>
+                    ))}
+                  </div>
+                ) : null}
                 <button
                   className="rounded-full bg-sky-500 px-3 py-1 text-xs font-semibold text-white"
-                  onClick={() => router.push(`/reef/${reef.slug}`)}
+                  onClick={() => {
+                    if (!reef.slug) return;
+                    router.push(`/reef/${reef.slug}`);
+                  }}
                 >
                   Open reef
                 </button>

@@ -2,25 +2,25 @@
 
 import { useEffect, useState } from "react";
 import { db } from "@/lib/firebase";
-import { collection, getDocs } from "firebase/firestore";
+import { collection, onSnapshot } from "firebase/firestore";
 import ReefCard from "@/components/ReefCard";
 import ShowMapButton from "@/components/ShowMapButton";
 import LeafletMap from "@/components/LeafletMap";
+import SeedReefsButton from "@/components/SeedReefsButton";
 import type { Reef } from "@/lib/types";
 
 export default function GalleryPage() {
   const [reefs, setReefs] = useState<Reef[]>([]);
 
   useEffect(() => {
-    const fetchReefs = async () => {
-      const querySnapshot = await getDocs(collection(db, "reefs"));
+    const unsubscribe = onSnapshot(collection(db, "reefs"), (snapshot) => {
       const data: Reef[] = [];
-      querySnapshot.forEach((docSnap) => {
+      snapshot.forEach((docSnap) => {
         data.push({ id: docSnap.id, ...(docSnap.data() as Reef) });
       });
       setReefs(data);
-    };
-    fetchReefs();
+    });
+    return () => unsubscribe();
   }, []);
 
   return (
@@ -31,8 +31,9 @@ export default function GalleryPage() {
           "linear-gradient(to bottom, #041020, #052030 30%, #062a3e 60%, #0a3d56)",
       }}
     >
-      <section className="mb-3 ml-2 mt-2.5">
+      <section className="mb-3 ml-2 mt-2.5 flex flex-wrap items-center gap-3">
         <ShowMapButton />
+        <SeedReefsButton />
       </section>
 
       <section className="mb-6">
