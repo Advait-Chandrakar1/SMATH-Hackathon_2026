@@ -1,8 +1,9 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-
 import NavProfile from "@/components/NavBar";
+import { AuthProvider } from "@/lib/AuthContext";
+
 const geistSans = Geist({ variable: "--font-geist-sans", subsets: ["latin"] });
 const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
@@ -16,22 +17,21 @@ export const metadata: Metadata = {
 
 export default function RootLayout({
   children,
-}: Readonly<{ children: React.ReactNode }>) {
+}: {
+  children: React.ReactNode;
+}) {
   return (
     <html lang="en">
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        {/*
-          Providers wraps everything so Firebase auth state is available
-          anywhere in the tree — NavProfile and SaveButton both depend on it.
-        */}
+        <AuthProvider>
+          <div className="fixed right-5 top-4 z-50">
+            <NavProfile />
+          </div>
 
-        {/* NavProfile sits fixed top-right above all page content */}
-        <div className="fixed right-5 top-4 z-50">
-          <NavProfile />
-        </div>
-        {children}
+          {children}
+        </AuthProvider>
       </body>
     </html>
   );

@@ -1,4 +1,5 @@
 import DomeGallery from "@/components/DomeGallery";
+import ShowMapButton from "@/components/ShowMapButton";
 
 export default function GalleryPage() {
   return (
@@ -9,6 +10,9 @@ export default function GalleryPage() {
           "linear-gradient(to bottom, #041020, #052030 30%, #062a3e 60%, #0a3d56)",
       }}
     >
+      <section className="mt-2.5 mb-3 ml-2">
+        <ShowMapButton />
+      </section>
       <section className="relative z-10 w-full h-screen">
         <DomeGallery
           fit={0.8}

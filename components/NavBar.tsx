@@ -119,10 +119,10 @@ export default function NavProfile() {
 
         <DropdownMenuItem asChild>
           <Link
-            href="/my-reefs"
+            href="/gallery"
             className="flex items-center gap-2 rounded-lg px-2 py-1.5 text-sm text-sky-800"
           >
-            My Reefs
+            Reefs
           </Link>
         </DropdownMenuItem>
 

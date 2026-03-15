@@ -28,7 +28,6 @@ export default function HeroContent() {
         .glass-float { animation: glassFloat 6s ease-in-out infinite; }
       `}</style>
 
-      {/* ── Caustic light blobs (CSS only, no JS) ───────────────────────── */}
       <div
         className="pointer-events-none absolute inset-0 overflow-hidden"
         aria-hidden
@@ -57,7 +56,7 @@ export default function HeroContent() {
         ))}
       </div>
 
-      {/* ── Glass card ───────────────────────────────────────────────────── */}
+      {/* here we are going to uese a glass component  */}
       <div
         className="glass-float relative flex flex-col items-center gap-7 rounded-3xl px-10 py-12 anim-in"
         style={{
@@ -76,7 +75,7 @@ export default function HeroContent() {
           variant="outline"
           style={{ animationDelay: "0.1s" }}
         >
-          🪸 Explore · Learn · Protect
+          🪸 Shivang Patel | Advait Chandrakar | Abhinav Ramireddy
         </Badge>
 
         {/* Heading */}
@@ -98,9 +97,8 @@ export default function HeroContent() {
           </h1>
         </div>
 
-        {/* Sub-line */}
         <p
-          className="body-font anim-in max-w-sm text-base font-light leading-relaxed text-sky-700/75"
+          className="body-font anim-in max-w-sm text-base font-light leading-relaxed text-black"
           style={{ animationDelay: "0.3s" }}
         >
           Explore endangered coral reefs, discover what threatens them, and find
@@ -108,21 +106,11 @@ export default function HeroContent() {
         </p>
 
         <Separator className="bg-sky-200/50" />
-
-        {/* Nav */}
+        {/* this is our card content for quick action links */}
         <nav
           className="anim-in flex flex-wrap items-center justify-center gap-3"
           style={{ animationDelay: "0.4s" }}
         >
-          s
-          <Link href="/my-reefs">
-            <Button
-              variant="outline"
-              className="body-font rounded-full border-sky-200/70 bg-white/40 px-5 text-xs font-medium uppercase tracking-widest text-sky-600 backdrop-blur hover:bg-white/60 hover:border-sky-300 hover:text-sky-700"
-            >
-              My Reefs
-            </Button>
-          </Link>
           <Link href="/gallery">
             <Button
               className="body-font rounded-full px-6 text-xs font-semibold uppercase tracking-widest text-white"
@@ -132,7 +120,7 @@ export default function HeroContent() {
                   "0 4px 20px rgba(14,165,233,0.4), 0 1px 0 rgba(255,255,255,0.3) inset",
               }}
             >
-              Gallery
+              Reefs
             </Button>
           </Link>
           <Link href="/about">
@@ -146,7 +134,6 @@ export default function HeroContent() {
         </nav>
       </div>
 
-      {/* ── Subtle bottom depth gradient ────────────────────────────────── */}
       <div
         className="pointer-events-none absolute bottom-0 inset-x-0 h-32"
         style={{
