@@ -6,7 +6,7 @@ export const ReefChat = {
   // In-memory history for now
   history: [] as { question: string; answer: string }[],
 
-  askQuestion: async (question: string) => {
+  askQuestion: async (question: string): Promise<string> => {
     if (!question) return;
     try {
       const res = await fetch("/api/reef-ai", {
@@ -21,17 +21,15 @@ export const ReefChat = {
           data?.error ||
           data?.answer ||
           `AI request failed (${res.status}).`;
-        alert(message);
-        return;
+        throw new Error(message);
       }
       const answer = data?.answer || "Sorry, I couldn't find an answer.";
 
       ReefChat.history.push({ question, answer });
-      console.log("ReefChat history:", ReefChat.history);
-      alert(answer); // Temporary UI feedback
+      return answer;
     } catch (err) {
       console.error("Error querying MITRAL:", err);
-      alert("Error connecting to AI.");
+      throw err;
     }
   },
 };

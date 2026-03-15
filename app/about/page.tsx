@@ -85,12 +85,12 @@ export default function AboutPage() {
               Explore Reefs
             </Button>
           </Link>
-          <Link href="/my-reefs">
+          <Link href="/gallery">
             <Button
               variant="outline"
               className="rounded-full border-sky-200/70 bg-white/10 px-6 text-xs font-semibold uppercase tracking-widest text-sky-100 hover:bg-white/20"
             >
-              My Reefs
+              Reef
             </Button>
           </Link>
         </div>
