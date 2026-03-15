@@ -91,7 +91,7 @@ export default function OceanBg() {
             {Array.from({ length: 6 }).map((_, t) => (
               <div
                 key={t}
-                className="w-px bg-gradient-to-b from-purple-400/50 to-transparent"
+                className="w-px bg-linear-to-b from-purple-400/50 to-transparent"
                 style={{ height: j.w * 0.9 }}
               />
             ))}

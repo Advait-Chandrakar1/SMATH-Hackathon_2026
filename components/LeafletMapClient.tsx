@@ -28,15 +28,14 @@ export default function LeafletMapClient() {
   // Optional: custom marker icon
   const reefIcon = new L.DivIcon({
     className: "",
-    html:
-      '<div style="width:18px;height:18px;border-radius:999px;background:#22c55e;border:3px solid #0f172a;box-shadow:0 6px 14px rgba(15,23,42,0.4)"></div>',
+    html: '<div style="width:18px;height:18px;border-radius:999px;background:#22c55e;border:3px solid #0f172a;box-shadow:0 6px 14px rgba(15,23,42,0.4)"></div>',
     iconSize: [18, 18],
     iconAnchor: [9, 9],
     popupAnchor: [0, -8],
   });
 
   return (
-    <div className="h-[520px] w-full overflow-hidden rounded-3xl border border-cyan-200/20 shadow-[0_24px_80px_rgba(2,16,24,0.45)]">
+    <div className="h-130 w-full overflow-hidden rounded-3xl border border-cyan-200/20 shadow-[0_24px_80px_rgba(2,16,24,0.45)]">
       <MapContainer
         center={[20, 0]}
         zoom={1.75}
@@ -65,18 +64,14 @@ export default function LeafletMapClient() {
               <div className="space-y-2 text-slate-900">
                 <div>
                   <h3 className="text-sm font-semibold">{reef.name}</h3>
-                  <p className="text-xs text-slate-600">
-                    {reef.description}
-                  </p>
+                  <p className="text-xs text-slate-600">{reef.description}</p>
                 </div>
                 {reef.facts?.length ? (
                   <div>
                     <p className="text-[11px] font-semibold text-slate-700">
                       Quick fact
                     </p>
-                    <p className="text-xs text-slate-600">
-                      {reef.facts[0]}
-                    </p>
+                    <p className="text-xs text-slate-600">{reef.facts[0]}</p>
                   </div>
                 ) : null}
                 {reef.issues?.length ? (

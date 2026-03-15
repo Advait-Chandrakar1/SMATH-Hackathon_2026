@@ -11,26 +11,29 @@ import {
 } from "recharts";
 
 interface ReefStatsChartProps {
-  likes: number;
-  reviews: number;
-  bookmarks: number;
+  coralCover: number;
+  fishDiversity: number;
+  waterClarity: number;
+  heatStress: number;
 }
 
 export default function ReefStatsChart({
-  likes,
-  reviews,
-  bookmarks,
+  coralCover,
+  fishDiversity,
+  waterClarity,
+  heatStress,
 }: ReefStatsChartProps) {
   const data = [
-    { name: "Likes", value: likes },
-    { name: "Reviews", value: reviews },
-    { name: "Bookmarks", value: bookmarks },
+    { name: "Coral cover", value: coralCover },
+    { name: "Fish diversity", value: fishDiversity },
+    { name: "Water clarity", value: waterClarity },
+    { name: "Heat stress", value: heatStress },
   ];
 
   return (
     <div className="h-60 w-full rounded-2xl border border-sky-200/20 bg-slate-950/60 p-4">
       <p className="mb-2 text-sm font-semibold text-sky-100">
-        Reef activity
+        Reef health snapshot
       </p>
       <ResponsiveContainer width="100%" height="100%">
         <BarChart data={data}>
