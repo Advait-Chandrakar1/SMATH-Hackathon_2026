@@ -1,4 +1,3 @@
-import ClientOnlyGallery from "@/components/ClientOnlyGallery";
 import ShowMapButton from "@/components/ShowMapButton";
 
 export default function GalleryPage() {
@@ -12,9 +11,6 @@ export default function GalleryPage() {
     >
       <section className="mb-3 ml-2 mt-2.5">
         <ShowMapButton />
-      </section>
-      <section className="relative z-10 h-screen w-full">
-        <ClientOnlyGallery />
       </section>
     </div>
   );
