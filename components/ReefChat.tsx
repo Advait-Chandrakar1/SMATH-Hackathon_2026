@@ -18,9 +18,7 @@ export const ReefChat = {
       const data = await res.json().catch(() => ({}));
       if (!res.ok) {
         const message =
-          data?.error ||
-          data?.answer ||
-          `AI request failed (${res.status}).`;
+          data?.error || data?.answer || `AI request failed (${res.status}).`;
         alert(message);
         return;
       }
