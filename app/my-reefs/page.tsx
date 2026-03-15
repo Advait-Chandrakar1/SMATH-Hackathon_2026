@@ -2,59 +2,66 @@
 
 import { useAuth } from "@/lib/AuthContext";
 import { db } from "@/lib/firebase";
-import { collection, getDocs, doc, getDoc } from "firebase/firestore";
-import { useEffect, useState } from "react";
+import {
+  collection,
+  doc,
+  onSnapshot,
+  query,
+  where,
+} from "firebase/firestore";
+import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
-import type { Reef } from "@/lib/types";
+import type { Reef, UserProfile } from "@/lib/types";
 
 export default function MyReefsPage() {
   const { user } = useAuth();
-  const [reefs, setReefs] = useState<Reef[]>([]);
+  const [profile, setProfile] = useState<UserProfile | null>(null);
+  const [reefMap, setReefMap] = useState<Record<string, Reef>>({});
 
   useEffect(() => {
     if (!user) return;
-
-    const fetchSaved = async () => {
-      try {
-        const snapshot = await getDocs(
-          collection(db, "users", user.uid, "savedReefs"),
-        );
-        const reefIds = snapshot.docs.map((doc) => doc.id);
-
-        const reefDocs = await Promise.all(
-          reefIds.map(async (id) => {
-            const reefSnap = await getDoc(doc(db, "reefs", id));
-            if (!reefSnap.exists()) return null;
-
-            const data = reefSnap.data();
-            // Ensure all required fields exist
-            if (!data || !data.name || !data.latitude || !data.longitude)
-              return null;
-
-            return {
-              id: reefSnap.id,
-              slug: data.slug || "",
-              name: data.name,
-              description: data.description || "",
-              latitude: data.latitude,
-              longitude: data.longitude,
-              image: data.image,
-              likes: data.likes,
-              bookmarks: data.bookmarks,
-              reviews: data.reviews,
-            } as Reef;
-          }),
-        );
-
-        // Filter out nulls safely
-        setReefs(reefDocs.filter((r): r is Reef => r !== null));
-      } catch (error) {
-        console.error("Error fetching saved reefs:", error);
-      }
-    };
-
-    fetchSaved();
+    const userRef = doc(db, "users", user.uid);
+    const unsubscribe = onSnapshot(userRef, (snapshot) => {
+      if (!snapshot.exists()) return;
+      setProfile(snapshot.data() as UserProfile);
+    });
+    return () => unsubscribe();
   }, [user]);
+
+  useEffect(() => {
+    if (!profile) return;
+    const slugs = profile.bookmarks ?? [];
+    if (slugs.length === 0) {
+      setReefMap({});
+      return;
+    }
+
+    const chunks: string[][] = [];
+    for (let i = 0; i < slugs.length; i += 10) {
+      chunks.push(slugs.slice(i, i + 10));
+    }
+
+    const unsubscribes = chunks.map((chunk) =>
+      onSnapshot(
+        query(collection(db, "reefs"), where("slug", "in", chunk)),
+        (snapshot) => {
+          setReefMap((prev) => {
+            const next = { ...prev };
+            snapshot.forEach((docSnap) => {
+              const data = docSnap.data() as Reef;
+              const reefSlug = data.slug || docSnap.id;
+              next[reefSlug] = { ...data, slug: reefSlug, id: docSnap.id };
+            });
+            return next;
+          });
+        }
+      )
+    );
+
+    return () => unsubscribes.forEach((unsubscribe) => unsubscribe());
+  }, [profile]);
+
+  const reefs = useMemo(() => Object.values(reefMap), [reefMap]);
 
   if (!user) return <p>Please sign in to see saved reefs.</p>;
 
@@ -63,7 +70,7 @@ export default function MyReefsPage() {
       <h1 className="text-3xl mb-4">My Saved Reefs</h1>
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
         {reefs.map((reef) => (
-          <Link key={reef.id} href={`/reefs/${reef.id}`}>
+          <Link key={reef.id} href={`/reef/${reef.slug}`}>
             <div className="border p-2 rounded">{reef.name}</div>
           </Link>
         ))}

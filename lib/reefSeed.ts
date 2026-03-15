@@ -104,7 +104,7 @@ export const reefSeedData: Reef[] = [
     description: "Extensive coral and sponge reef system off Brazil and French Guiana.",
     latitude: 2.0,
     longitude: -51.0,
-    image: "/reefguard logo.png",
+
     facts: [
       "One of the largest reef systems in the Atlantic Ocean.",
       "Discovered relatively recently and spans hundreds of miles.",
@@ -120,7 +120,7 @@ export const reefSeedData: Reef[] = [
     description: "Large coral reef system in the Philippines’ Mindoro Strait.",
     latitude: 12.7,
     longitude: 120.2,
-    image: "/reefguard logo.png",
+
     facts: [
       "One of the largest contiguous coral reef systems in the world.",
       "Important habitat for turtles and fish.",
@@ -136,7 +136,7 @@ export const reefSeedData: Reef[] = [
     description: "Coral reef area around Bunaken Island, Indonesia.",
     latitude: 1.6,
     longitude: 124.8,
-    image: "/reefguard logo.png",
+
     facts: [
       "Part of a marine park with hundreds of coral types.",
       "Noted for very high marine biodiversity.",
@@ -152,7 +152,7 @@ export const reefSeedData: Reef[] = [
     description: "Coral reef near Kalpitiya, Sri Lanka.",
     latitude: 8.0,
     longitude: 79.8,
-    image: "/reefguard logo.png",
+
     facts: [
       "One of the richest reef ecosystems in the Indian Ocean.",
       "Important site for conservation in Sri Lanka.",
@@ -168,7 +168,7 @@ export const reefSeedData: Reef[] = [
     description: "Fringing coral reef along Western Australia.",
     latitude: -22.3,
     longitude: 113.8,
-    image: "/reefguard logo.png",
+
     facts: [
       "UNESCO World Heritage site.",
       "Whale sharks frequent its waters seasonally.",
@@ -184,7 +184,7 @@ export const reefSeedData: Reef[] = [
     description: "Large reef group in the Miyako Islands, Japan.",
     latitude: 24.9,
     longitude: 125.3,
-    image: "/reefguard logo.png",
+
     facts: [
       "Japan’s largest coral reef grouping.",
       "Contains hundreds of individual reef patches.",
@@ -200,7 +200,7 @@ export const reefSeedData: Reef[] = [
     description: "Extensive reef system along the Caribbean coasts of Mexico, Belize, Guatemala, and Honduras.",
     latitude: 18.5,
     longitude: -87.5,
-    image: "/reefguard logo.png",
+
     facts: [
       "Second-largest barrier reef system in the world.",
       "Supports fisheries and tourism across four countries.",
@@ -216,7 +216,7 @@ export const reefSeedData: Reef[] = [
     description: "Deep‑water coral reef off Florida, United States.",
     latitude: 25.0,
     longitude: -80.5,
-    image: "/reefguard logo.png",
+
     facts: [
       "Deep‑sea reef with unique coral species.",
       "Less exposed to surface temperature variations.",
@@ -232,7 +232,7 @@ export const reefSeedData: Reef[] = [
     description: "Deep‑water coral reef off the coast of Norway.",
     latitude: 67.5,
     longitude: 11.0,
-    image: "/reefguard logo.png",
+
     facts: [
       "World’s largest known Lophelia deep coral reef.",
       "Important habitat for cold‑water species.",

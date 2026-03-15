@@ -16,7 +16,7 @@ import {
   query,
   setDoc,
   Timestamp,
-  updateDoc,
+  writeBatch,
   where,
 } from "firebase/firestore";
 import type { Reef, UserProfile } from "@/lib/types";
@@ -25,25 +25,22 @@ import { Button } from "@/components/ui/button";
 import { Bookmark, Heart, Waves } from "lucide-react";
 import ReefLocationMap from "@/components/ReefLocationMap";
 import ReefStatsChart from "@/components/ReefStatsChart";
-import ReviewList from "@/components/ReviewList";
-import AddReview from "@/components/AddReview";
 
 export default function ReefDetailPage() {
   const params = useParams();
-  const slug = Array.isArray(params?.slug)
-    ? params.slug[0]
-    : params?.slug;
+  const slug = Array.isArray(params?.slug) ? params.slug[0] : params?.slug;
   const { user } = useAuth();
 
   const [reef, setReef] = useState<Reef | null>(null);
   const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
+  const [actionMessage, setActionMessage] = useState<string | null>(null);
 
   useEffect(() => {
     if (!slug) return;
     const reefQuery = query(
       collection(db, "reefs"),
       where("slug", "==", slug),
-      limit(1)
+      limit(1),
     );
     const unsubscribe = onSnapshot(reefQuery, (snapshot) => {
       if (snapshot.empty) {
@@ -112,15 +109,19 @@ export default function ReefDetailPage() {
 
     try {
       await ensureUserDoc();
+      const batch = writeBatch(db);
       if (isLiked) {
-        await setDoc(userRef, { likes: arrayRemove(slug) }, { merge: true });
-        await updateDoc(reefRef, { likes: increment(-1) });
+        batch.set(userRef, { likes: arrayRemove(slug) }, { merge: true });
+        batch.update(reefRef, { likes: increment(-1) });
       } else {
-        await setDoc(userRef, { likes: arrayUnion(slug) }, { merge: true });
-        await updateDoc(reefRef, { likes: increment(1) });
+        batch.set(userRef, { likes: arrayUnion(slug) }, { merge: true });
+        batch.update(reefRef, { likes: increment(1) });
       }
+      await batch.commit();
+      setActionMessage(isLiked ? "Like removed." : "Liked!");
     } catch (err) {
       console.error("Failed to toggle like:", err);
+      setActionMessage("Like failed to save. Check your connection.");
     }
   };
 
@@ -131,23 +132,19 @@ export default function ReefDetailPage() {
 
     try {
       await ensureUserDoc();
+      const batch = writeBatch(db);
       if (isBookmarked) {
-        await setDoc(
-          userRef,
-          { bookmarks: arrayRemove(slug) },
-          { merge: true }
-        );
-        await updateDoc(reefRef, { bookmarks: increment(-1) });
+        batch.set(userRef, { bookmarks: arrayRemove(slug) }, { merge: true });
+        batch.update(reefRef, { bookmarks: increment(-1) });
       } else {
-        await setDoc(
-          userRef,
-          { bookmarks: arrayUnion(slug) },
-          { merge: true }
-        );
-        await updateDoc(reefRef, { bookmarks: increment(1) });
+        batch.set(userRef, { bookmarks: arrayUnion(slug) }, { merge: true });
+        batch.update(reefRef, { bookmarks: increment(1) });
       }
+      await batch.commit();
+      setActionMessage(isBookmarked ? "Bookmark removed." : "Bookmarked!");
     } catch (err) {
       console.error("Failed to toggle bookmark:", err);
+      setActionMessage("Bookmark failed to save. Check your connection.");
     }
   };
 
@@ -158,14 +155,15 @@ export default function ReefDetailPage() {
     const timestamp = Timestamp.now();
     try {
       await ensureUserDoc();
-      await updateDoc(reefRef, {
+      const batch = writeBatch(db);
+      batch.update(reefRef, {
         reviews: arrayUnion({
           uid: user.uid,
           text,
           timestamp,
         }),
       });
-      await setDoc(
+      batch.set(
         userRef,
         {
           reviews: arrayUnion({
@@ -174,10 +172,13 @@ export default function ReefDetailPage() {
             timestamp,
           }),
         },
-        { merge: true }
+        { merge: true },
       );
+      await batch.commit();
+      setActionMessage("Review posted.");
     } catch (err) {
       console.error("Failed to submit review:", err);
+      setActionMessage("Review failed to post.");
     }
   };
 
@@ -263,6 +264,9 @@ export default function ReefDetailPage() {
                     Sign in to like, bookmark, or review.
                   </p>
                 )}
+                {actionMessage && user && (
+                  <p className="text-xs text-sky-200/70">{actionMessage}</p>
+                )}
               </div>
             </div>
 
@@ -276,12 +280,27 @@ export default function ReefDetailPage() {
         </Card>
 
         <Card className="border border-sky-200/20 bg-slate-950/70 text-white">
-          <CardHeader className="flex flex-row items-center justify-between">
-            <CardTitle className="text-lg">Reef reviews</CardTitle>
-            <AddReview disabled={!user} onSubmit={handleSubmitReview} />
+          <CardHeader>
+            <CardTitle className="text-lg">Reef activity</CardTitle>
           </CardHeader>
-          <CardContent className="space-y-4">
-            <ReviewList reviews={reef.reviews ?? []} />
+          <CardContent className="grid gap-3 md:grid-cols-4">
+            {[
+              { label: "Likes", value: reef.likes ?? 0 },
+              { label: "Bookmarks", value: reef.bookmarks ?? 0 },
+              { label: "Guardians", value: userProfile ? 1 : 0 },
+            ].map((item) => (
+              <div
+                key={item.label}
+                className="rounded-2xl border border-sky-200/10 bg-slate-900/60 p-4"
+              >
+                <p className="text-xs uppercase tracking-wide text-sky-200/60">
+                  {item.label}
+                </p>
+                <p className="text-2xl font-semibold text-white">
+                  {item.value}
+                </p>
+              </div>
+            ))}
           </CardContent>
         </Card>
       </div>

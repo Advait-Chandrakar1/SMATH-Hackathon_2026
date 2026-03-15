@@ -20,9 +20,21 @@ export default function ProfileClient() {
   const { user } = useAuth();
   const [profile, setProfile] = useState<UserProfileType | null>(null);
   const [reefMap, setReefMap] = useState<Record<string, Reef>>({});
+  const [profileError, setProfileError] = useState<string | null>(null);
 
   useEffect(() => {
     if (!user) return;
+    setProfile((prev) => {
+      if (prev) return prev;
+      return {
+        uid: user.uid,
+        displayName: user.displayName ?? "Reef Guardian",
+        email: user.email ?? "",
+        bookmarks: [],
+        likes: [],
+        reviews: [],
+      };
+    });
     const userRef = doc(db, "users", user.uid);
     const ensureUserDoc = async () => {
       const snap = await getDoc(userRef);
@@ -38,10 +50,17 @@ export default function ProfileClient() {
     };
     ensureUserDoc();
 
-    const unsubscribe = onSnapshot(userRef, (snapshot) => {
-      if (!snapshot.exists()) return;
-      setProfile(snapshot.data() as UserProfileType);
-    });
+    const unsubscribe = onSnapshot(
+      userRef,
+      (snapshot) => {
+        if (!snapshot.exists()) return;
+        setProfile(snapshot.data() as UserProfileType);
+      },
+      (error) => {
+        console.error("Profile snapshot error:", error);
+        setProfileError("Unable to load profile data.");
+      }
+    );
 
     return () => unsubscribe();
   }, [user]);
@@ -88,7 +107,9 @@ export default function ProfileClient() {
   const reefs = useMemo(() => Object.values(reefMap), [reefMap]);
 
   if (!user) return <ProfileLogin />;
-  if (!profile) return null;
+  if (profileError) return <div className="text-sky-700">{profileError}</div>;
+  if (!profile)
+    return <div className="text-sky-700">Loading profile...</div>;
 
   return (
     <UserProfile
