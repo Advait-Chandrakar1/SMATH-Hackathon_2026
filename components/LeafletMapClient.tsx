@@ -6,9 +6,11 @@ import { useEffect, useState } from "react";
 import { db } from "@/lib/firebase";
 import { collection, getDocs } from "firebase/firestore";
 import L from "leaflet";
+import { useRouter } from "next/navigation";
 
 interface Reef {
   id: string;
+  slug: string;
   name: string;
   description: string;
   latitude: number;
@@ -17,6 +19,7 @@ interface Reef {
 
 export default function LeafletMapClient() {
   const [reefs, setReefs] = useState<Reef[]>([]);
+  const router = useRouter();
 
   useEffect(() => {
     async function fetchReefs() {
@@ -32,9 +35,13 @@ export default function LeafletMapClient() {
   }, []);
 
   // Optional: custom marker icon
-  const reefIcon = new L.Icon({
-    iconUrl: "/reef-marker.png", // add an icon in /public
-    iconSize: [30, 30],
+  const reefIcon = new L.DivIcon({
+    className: "",
+    html:
+      '<div style="width:18px;height:18px;border-radius:999px;background:#22c55e;border:3px solid #0f172a;box-shadow:0 6px 14px rgba(15,23,42,0.4)"></div>',
+    iconSize: [18, 18],
+    iconAnchor: [9, 9],
+    popupAnchor: [0, -8],
   });
 
   return (
@@ -64,9 +71,19 @@ export default function LeafletMapClient() {
             icon={reefIcon}
           >
             <Popup>
-              <div className="text-white">
-                <h3 className="font-bold">{reef.name}</h3>
-                <p>{reef.description}</p>
+              <div className="space-y-2 text-slate-900">
+                <div>
+                  <h3 className="text-sm font-semibold">{reef.name}</h3>
+                  <p className="text-xs text-slate-600">
+                    {reef.description}
+                  </p>
+                </div>
+                <button
+                  className="rounded-full bg-sky-500 px-3 py-1 text-xs font-semibold text-white"
+                  onClick={() => router.push(`/reef/${reef.slug}`)}
+                >
+                  Open reef
+                </button>
               </div>
             </Popup>
           </Marker>

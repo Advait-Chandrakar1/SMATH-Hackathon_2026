@@ -1,10 +1,9 @@
 "use client";
 
-import { Reef } from "@/app/gallery/page";
-
-import ReviewList from "./ReviewList";
-import AddReview from "./AddReview";
-import { Card } from "./ui/card";
+import Link from "next/link";
+import type { Reef } from "@/lib/types";
+import { Card, CardContent, CardFooter } from "./ui/card";
+import { Button } from "./ui/button";
 
 interface ReefCardProps {
   reef: Reef;
@@ -12,17 +11,31 @@ interface ReefCardProps {
 
 export default function ReefCard({ reef }: ReefCardProps) {
   return (
-    <Card className="bg-cyan-950/50 p-4 rounded-xl">
-      <img
-        src={reef.image}
-        alt={reef.name}
-        className="w-full h-48 object-cover rounded-lg mb-2"
-      />
-      <h2 className="text-xl font-semibold">{reef.name}</h2>
-      <p className="text-sm mb-2">{reef.description}</p>
+    <Card className="flex h-full flex-col overflow-hidden rounded-2xl border border-cyan-200/20 bg-cyan-950/50">
+      <div className="relative h-44 w-full overflow-hidden">
+        <img
+          src={reef.image || "/reefguard logo.png"}
+          alt={reef.name}
+          className="h-full w-full object-cover"
+        />
+      </div>
 
-      <ReviewList reviews={reef.reviews || []} />
-      <AddReview reefId={reef.id} />
+      <CardContent className="flex flex-1 flex-col gap-2 p-4">
+        <h2 className="text-lg font-semibold text-white">{reef.name}</h2>
+        <p className="text-sm text-sky-100/80">{reef.description}</p>
+        <div className="mt-2 flex flex-wrap gap-3 text-xs text-sky-100/70">
+          <span>{reef.likes ?? 0} likes</span>
+          <span>{reef.reviews?.length ?? 0} reviews</span>
+        </div>
+      </CardContent>
+
+      <CardFooter className="p-4 pt-0">
+        <Link href={`/reef/${reef.slug}`} className="w-full">
+          <Button className="w-full rounded-full bg-sky-500 hover:bg-sky-400">
+            View reef
+          </Button>
+        </Link>
+      </CardFooter>
     </Card>
   );
 }

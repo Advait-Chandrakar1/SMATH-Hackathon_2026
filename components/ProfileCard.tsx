@@ -53,7 +53,7 @@ export default function ProfileCard({ user }: any) {
         <CardContent className="flex flex-col gap-2">
           <Link href="/">
             <Button variant="ghost" className="w-full justify-start">
-              Home / Map
+              Home
             </Button>
           </Link>
 

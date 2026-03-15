@@ -5,14 +5,8 @@ import { db } from "@/lib/firebase";
 import { collection, getDocs } from "firebase/firestore";
 import ReefCard from "@/components/ReefCard";
 import ShowMapButton from "@/components/ShowMapButton";
-
-interface Reef {
-  id: string;
-  name: string;
-  description: string;
-  image: string;
-  reviews?: { userId: string; text: string; likes?: string[] }[];
-}
+import LeafletMap from "@/components/LeafletMap";
+import type { Reef } from "@/lib/types";
 
 export default function GalleryPage() {
   const [reefs, setReefs] = useState<Reef[]>([]);
@@ -39,6 +33,10 @@ export default function GalleryPage() {
     >
       <section className="mb-3 ml-2 mt-2.5">
         <ShowMapButton />
+      </section>
+
+      <section className="mb-6">
+        <LeafletMap />
       </section>
 
       <section className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
