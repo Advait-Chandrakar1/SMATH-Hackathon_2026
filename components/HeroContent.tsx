@@ -1,22 +1,56 @@
-import Image from "next/image";
 import Link from "next/link";
 
 export default function HeroContent() {
   return (
-    <main className="relative z-10 flex min-h-screen max-w-2xl flex-col justify-between gap-12 px-12 py-24">
-      <div className="flex flex-col gap-5">
-        <h1 className="font-serif text-5xl font-bold leading-tight tracking-tight text-cyan-50 drop-shadow-lg">
-          Welcome to
-          <em
-            className="not-italic text-teal-300 ml-3"
-            style={{ textShadow: "0 0 24px rgba(78,236,216,0.7)" }}
-          >
-            SeaFloor
-          </em>
-        </h1>
+    <main className="relative z-10 flex min-h-screen flex-col items-center px-6 pb-16 pt-10 text-center">
+      <div className="absolute right-6 top-6 flex items-center gap-3">
+        <Link
+          href="/settings"
+          className="flex h-10 w-10 items-center justify-center rounded-full border border-teal-300/40 text-teal-100/90 transition hover:border-teal-200 hover:text-teal-100"
+          aria-label="Profile settings"
+        >
+          <span className="text-sm font-semibold">Me</span>
+        </Link>
+        <Link
+          href="/sign-in"
+          className="flex h-10 items-center rounded-full border border-teal-400/30 px-4 text-xs font-semibold uppercase tracking-widest text-teal-100/80 transition hover:-translate-y-0.5 hover:border-teal-400/70 hover:bg-teal-400/5"
+        >
+          Sign In
+        </Link>
       </div>
 
-      <div className="flex flex-wrap gap-4">
+      <h1 className="font-serif text-5xl font-bold leading-tight tracking-tight text-cyan-50 drop-shadow-lg">
+        Welcome to
+        <em
+          className="ml-3 not-italic text-teal-300"
+          style={{ textShadow: "0 0 24px rgba(78,236,216,0.7)" }}
+        >
+          SeaFloor
+        </em>
+      </h1>
+
+      <nav className="mt-6 flex flex-wrap items-center justify-center gap-4">
+        <Link
+          href="/my-reefs"
+          className="rounded-full border border-teal-300/40 px-5 py-2 text-sm font-semibold uppercase tracking-widest text-teal-100/90 transition hover:border-teal-200 hover:bg-teal-400/10"
+        >
+          My Reefs
+        </Link>
+        <Link
+          href="/"
+          className="rounded-full bg-teal-400/90 px-6 py-2 text-sm font-semibold uppercase tracking-widest text-cyan-950 shadow-[0_0_18px_rgba(20,184,196,0.55)] transition hover:-translate-y-0.5"
+        >
+          Home / Map
+        </Link>
+        <Link
+          href="/about"
+          className="rounded-full border border-teal-300/40 px-5 py-2 text-sm font-semibold uppercase tracking-widest text-teal-100/90 transition hover:border-teal-200 hover:bg-teal-400/10"
+        >
+          About Us
+        </Link>
+      </nav>
+
+      <div className="mt-auto flex flex-wrap justify-center gap-4 pb-0.1">
         <a
           href="/gallery"
           rel="noopener noreferrer"
@@ -27,14 +61,6 @@ export default function HeroContent() {
           }}
         >
           View Gallery
-        </a>
-        <a
-          href="https://nextjs.org/docs"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="flex h-12 items-center rounded-full border border-teal-400/30 px-7 font-serif text-sm font-light uppercase tracking-widest text-teal-100/80 transition-all hover:-translate-y-0.5 hover:border-teal-400/70 hover:bg-teal-400/5"
-        >
-          Profile
         </a>
       </div>
     </main>
